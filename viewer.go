@@ -10,8 +10,8 @@ func NewModelViewer(actor *Actor) gwu.HTML {
 		<div id="container" style="position:absolute;top:calc(100vh - 400px);left:0px;background-color:black; width:400px;height:400px;color:white;"></div>`)
 	}
 	
-	Mesh = actor.Mesh()
-	Texture = actor.Texture()
+	Mesh = "https://raw.githubusercontent.com/0ad/0ad/master/binaries/data/mods/public/"+actor.Mesh()
+	Texture = "https://raw.githubusercontent.com/0ad/0ad/master/binaries/data/mods/public/"+actor.Texture()
 	
 	if len(Texture) > 0 {
 		if Texture[len(Texture)-4:] == ".dds" {

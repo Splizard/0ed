@@ -5,8 +5,14 @@ import "github.com/beevik/etree"
 type Actor etree.Element 
 
 func LoadActor(path string) (*Actor, error) {
+	file, err := ActiveMod.Open(Actors+path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	
 	tree := etree.NewDocument()
-	if err := tree.ReadFromFile(path); err != nil {
+	if _, err := tree.ReadFrom(file); err != nil {
 		return nil, err
 	}
 	

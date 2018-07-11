@@ -8,7 +8,6 @@ import "strings"
 import "bufio"
 
 type Entity struct {
-	file string
 	tree *etree.Document
 	
 	Components *etree.Element
@@ -136,13 +135,18 @@ func (e *Entity) Actor() string {
 }
 
 func LoadEntity(template string) (e *Entity, err error) {
+	file, err := ActiveMod.Open(Templates+template+".xml")
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	
 	tree := etree.NewDocument()
-	if err = tree.ReadFromFile(Public+Templates+template+".xml"); err != nil {
+	if _, err = tree.ReadFrom(file); err != nil {
 		return nil, err
 	}
 	
 	e = new(Entity)
-	e.file = template
 	e.tree = tree
 	
 	e.Components = tree.Root()

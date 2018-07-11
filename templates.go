@@ -1,22 +1,23 @@
 package main
 
 import "github.com/icza/gowut/gwu"
-import "path/filepath"
-import "os"
 import "strings"
+import "sort"
 
 func CreateStartupWindow() (Window gwu.Window) {
 	Window = gwu.NewWindow("startup", "0ed")
 	
+	//Retrieve all template files from the 0ad public mod.
 	var templates []string
-	
-	filepath.Walk(Public+Templates, func(path string, info os.FileInfo, err error) error {
-		name := strings.Split(path, Public+Templates)[1]
-		if len(name) > 4 {
-		templates = append(templates, name[:len(name)-4])
+	for _, f := range Public.File {
+		if strings.Contains(f.Name, Templates) {
+			name := strings.Split(f.Name, Templates)[1]
+			if name[len(name)-4:] == ".xml" {
+				templates = append(templates, name[:len(name)-4])
+			}
 		}
-		return nil
-	})
+	}
+	sort.Strings(templates)
 	
 	ListBox := gwu.NewListBox(templates)
 	ListBox.SetMulti(true)

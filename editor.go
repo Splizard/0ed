@@ -9,14 +9,13 @@ import "sort"
 var SaveButton gwu.Button
 
 func CreateEditorWindow(template string) (Window gwu.Window) {
-	
 	entity, err := LoadEntity(template)
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 	
-	actor, err := LoadActor(Public+Actors+entity.Actor())
+	actor, err := LoadActor(entity.Actor())
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -197,7 +196,7 @@ func CreateEditorWindow(template string) (Window gwu.Window) {
 			SaveButton.SetText("Saved ✓")
 			e.MarkDirty(SaveButton)
 			
-			entity.WriteToFile(Mod+Templates+template)
+			entity.WriteToFile(Mods+Templates+template)
 		}
 	}, gwu.ETypeClick)
 	Window.Add(SaveButton)
