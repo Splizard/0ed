@@ -13,6 +13,64 @@ func NewModelViewer(actor *Actor) gwu.HTML {
 	Mesh = "https://raw.githubusercontent.com/0ad/0ad/master/binaries/data/mods/public/"+actor.Mesh()
 	Texture = "https://raw.githubusercontent.com/0ad/0ad/master/binaries/data/mods/public/"+actor.Texture()
 	
+	var PropLoaderString string
+	Props := actor.Props()
+	for prop, _ := range Props {
+		
+		var Mesh, Texture, TextureLoader string
+		
+		actor, err := LoadActor(prop)
+		if err != nil {
+			continue
+		}
+
+		if len(Texture) > 0 {
+			if Texture[len(Texture)-4:] == ".dds" {
+				TextureLoader = "THREE.DDSLoader()"
+			} else {
+				TextureLoader = "THREE.TextureLoader()"	
+			}
+		} else {
+			TextureLoader = "THREE.TextureLoader()"	
+		}
+		
+		Mesh = "https://raw.githubusercontent.com/0ad/0ad/master/binaries/data/mods/public/"+actor.Mesh()
+		Texture = "https://raw.githubusercontent.com/0ad/0ad/master/binaries/data/mods/public/"+actor.Texture()
+		
+		PropLoaderString += `
+		
+		if (true) {
+			let texture = (new `+TextureLoader+`).load('`+Texture+`');
+					
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+			
+			let textureLoader = new THREE.TextureLoader();
+			
+			let material = new THREE.MeshPhongMaterial({
+				map: texture,
+				//normalMap: textureLoader.load('./test/hele_struct_norm.png'),
+				//specularMap: textureLoader.load('./test/hele_struct_spec.png'),
+				//aoMap: textureLoader.load('./test/athen_temple.png'),
+			});
+			
+			let loader = new THREE.ColladaLoader( loadingManager );
+				loader.load( '`+Mesh+`', function ( collada ) {
+
+					collada.scene.traverse(function (node) {
+						if (node.isMesh) {
+							node.material.map = material.map;
+						}
+					});
+
+					models.push(collada.scene);
+					
+
+			} );
+		}`
+
+	}
+	
 	if len(Texture) > 0 {
 		if Texture[len(Texture)-4:] == ".dds" {
 			TextureLoader = "THREE.DDSLoader()"
@@ -96,6 +154,8 @@ func NewModelViewer(actor *Actor) gwu.HTML {
 					
 
 				} );
+	
+				`+PropLoaderString+`
 				
 				/*var loader = new THREE.ColladaLoader( loadingManager );
 				loader.load( './test/athen_temple_decor.dae', function ( collada ) {

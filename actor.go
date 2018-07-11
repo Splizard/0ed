@@ -28,6 +28,20 @@ func (a *Actor) Mesh() string {
 	return Meshes+mesh.Text()
 }
 
+func (a *Actor) Props() map[string]string {
+	props := (*etree.Element)(a).FindElement("./group/variant/props")
+	if props == nil {
+		return nil
+	}
+	
+	result := make(map[string]string)
+	for _, child := range props.ChildElements() {
+		result[child.SelectAttr("actor").Value] = child.SelectAttr("attachpoint").Value
+	}
+	
+	return result
+}
+
 func (a *Actor) Texture() string {
 	texture := (*etree.Element)(a).FindElement("./group/variant/textures/texture[@name='baseTex']")
 	if texture == nil {

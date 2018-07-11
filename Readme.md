@@ -33,7 +33,7 @@ Please report bugs to the issue tracker.
 ### Known Issues
 
 * Has not been tested on Windows at all.
-* Props are not shown in the 3D view.
+* Props are not shown in the correct location.
 * Some models refuse to load, others have incorrect textures. WebGL limitations...
 * User interface is ugly, don't worry though, I will be working with a designer to improve it.
 * XML attributes are not displayed and are unable to be modified (they are still preserved though).
