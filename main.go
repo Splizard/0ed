@@ -12,11 +12,18 @@ const Actors = "art/actors/"
 const Meshes = "art/meshes/"
 const Textures = "art/textures/skins/"
 
-var Mods string
+var Mods string = "./mods"
 
 func init() {	
 	uid, _ := user.Current()
-	Mods = uid.HomeDir+"/.local/share/0ad/mods/0ed/"
+	
+	if runtime.GOOS == "linux" {
+		Mods = uid.HomeDir+"/.local/share/0ad/mods/0ed/"
+	}
+	
+	if runtime.GOOS == "windows" {
+		Mods = uid.HomeDir+"/Documents/My Games/0ad/mods/"
+	}
 	
 	os.MkdirAll(Mods, 0755)
 	
