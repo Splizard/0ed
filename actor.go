@@ -50,3 +50,30 @@ func (a *Actor) Texture() string {
 	
 	return Textures+texture.SelectAttr("file").Value
 }
+
+func (a *Actor) Normal() string {
+	texture := (*etree.Element)(a).FindElement("./group/variant/textures/texture[@name='normTex']")
+	if texture == nil {
+		return ""
+	}
+	
+	return Textures+texture.SelectAttr("file").Value
+}
+
+func (a *Actor) Specular() string {
+	texture := (*etree.Element)(a).FindElement("./group/variant/textures/texture[@name='specTex']")
+	if texture == nil {
+		return ""
+	}
+	
+	return Textures+texture.SelectAttr("file").Value
+}
+
+func (a *Actor) AmbientOcclusion() string {
+	texture := (*etree.Element)(a).FindElement("./group/variant/textures/texture[@name='aoTex']")
+	if texture == nil {
+		return ""
+	}
+	
+	return Textures+texture.SelectAttr("file").Value
+}
