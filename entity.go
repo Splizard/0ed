@@ -30,13 +30,17 @@ func (e *Entity) Edit(path string, value string) {
 		last := ""
 		for i:=0; i < strings.Count(path, "/"); i++ {
 			dir, _ := reader.ReadString('/')
-			dir = dir[:len(dir)-1]
+			if last != "" {
+				dir = last+"/"+dir[:len(dir)-1]
+			} else {
+				dir = dir[:len(dir)-1]
+			}
 
 			if element = e.Components.FindElement("./"+dir); element == nil {
 				if last == "" {
-					element = e.Components.CreateElement(dir)
+					element = e.Components.CreateElement(filepath.Base(dir))
 				} else {
-					element = e.Components.FindElement("./"+last).CreateElement(dir)
+					element = e.Components.FindElement("./"+last).CreateElement(filepath.Base(dir))
 				}
 			} 
 			last = dir
