@@ -4,10 +4,10 @@ import "github.com/icza/gowut/gwu"
 
 func NewModelViewer(actor *Actor) gwu.HTML {
  	var Mesh, Texture, TextureLoader string
+ 	var Normal, Specular, AmbientOcclusion string
 	
 	if actor == nil || actor.Mesh() == "" {
-		return  gwu.NewHTML(`
-		<div id="container" style="position:absolute;top:calc(100vh - 400px);left:0px;background-color:black; width:400px;height:400px;color:white;"></div>`)
+		return  gwu.NewHTML(``)
 	}
 	
 	var Github = "https://raw.githubusercontent.com/0ad/0ad/master/binaries/data/mods/public/"
@@ -16,11 +16,22 @@ func NewModelViewer(actor *Actor) gwu.HTML {
 	Mesh = "https://raw.githubusercontent.com/0ad/0ad/master/binaries/data/mods/public/"+actor.Mesh()
 	Texture = "https://raw.githubusercontent.com/0ad/0ad/master/binaries/data/mods/public/"+actor.Texture()
 	
+	if actor.Normal() != "" {
+		Normal = `normalMap: textureLoader.load('`+Github+actor.Normal()+`'),`
+	}
+	if actor.Specular() != "" {
+		Specular = `specularMap: textureLoader.load('`+Github+actor.Specular()+`'),`
+	}
+	if actor.AmbientOcclusion() != "" {
+		AmbientOcclusion = `aoMap: textureLoader.load('`+Github+actor.AmbientOcclusion()+`'),`
+	}
+
 	var PropLoaderString string
 	Props := actor.Props()
 	for prop, _ := range Props {
 		
 		var Mesh, Texture, TextureLoader string
+		var Normal, Specular, AmbientOcclusion string
 		
 		actor, err := LoadActor(prop)
 		if err != nil {
@@ -37,9 +48,22 @@ func NewModelViewer(actor *Actor) gwu.HTML {
 			TextureLoader = "THREE.TextureLoader()"	
 		}
 		
+		if actor.Mesh() == "" {
+			continue
+		}
+		
 		Mesh = Github+actor.Mesh()
 		Texture = Github+actor.Texture()
 		
+		if actor.Normal() != "" {
+			Normal = `normalMap: textureLoader.load('`+Github+actor.Normal()+`'),`
+		}
+		if actor.Specular() != "" {
+			Specular = `specularMap: textureLoader.load('`+Github+actor.Specular()+`'),`
+		}
+		if actor.AmbientOcclusion() != "" {
+			AmbientOcclusion = `aoMap: textureLoader.load('`+Github+actor.AmbientOcclusion()+`'),`
+		}
 		
 		PropLoaderString += `
 		
@@ -53,9 +77,9 @@ func NewModelViewer(actor *Actor) gwu.HTML {
 			
 			let material = new THREE.MeshPhongMaterial({
 				map: texture,
-				normalMap: textureLoader.load('`+Github+actor.Normal()+`'),
-				specularMap: textureLoader.load('`+Github+actor.Specular()+`'),
-				aoMap: textureLoader.load('`+Github+actor.AmbientOcclusion()+`'),
+				`+Normal+`
+				`+Specular+`
+				`+AmbientOcclusion+`
 			});
 			
 			let loader = new THREE.ColladaLoader( loadingManager );
@@ -140,9 +164,9 @@ func NewModelViewer(actor *Actor) gwu.HTML {
 				
 				var material = new THREE.MeshPhongMaterial({
 					map: texture,
-					normalMap: textureLoader.load('`+Github+actor.Normal()+`'),
-					specularMap: textureLoader.load('`+Github+actor.Specular()+`'),
-					aoMap: textureLoader.load('`+Github+actor.AmbientOcclusion()+`'),
+					`+Normal+`
+					`+Specular+`
+					`+AmbientOcclusion+`
 				});
 				
 				var loader = new THREE.ColladaLoader( loadingManager );
@@ -160,49 +184,6 @@ func NewModelViewer(actor *Actor) gwu.HTML {
 				} );
 	
 				`+PropLoaderString+`
-				
-				/*var loader = new THREE.ColladaLoader( loadingManager );
-				loader.load( './test/athen_temple_decor.dae', function ( collada ) {
-
-					collada.scene.traverse(function (node) {
-						if (node.isMesh) {
-							node.material.map = material.map;
-						}
-					});
-				
-					models.push(collada.scene);
-					
-
-				} );
-				
-				var loader = new THREE.ColladaLoader( loadingManager );
-				loader.load( './test/athen_temple_props_a.dae', function ( collada ) {
-
-					collada.scene.traverse(function (node) {
-						if (node.isMesh) {
-							node.material.map = material.map;
-						}
-					});
-				
-					models.push(collada.scene);
-					
-
-				} );
-				
-				var loader = new THREE.ColladaLoader( loadingManager );
-				loader.load( './test/athen_temple_tile_c.dae', function ( collada ) {
-
-					collada.scene.traverse(function (node) {
-						if (node.isMesh) {
-							node.material.map = material.map;
-						}
-					});
-				
-					models.push(collada.scene);
-					
-
-				} );*/
-				
 
 				//
 
