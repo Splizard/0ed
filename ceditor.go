@@ -12,6 +12,7 @@ import "io/ioutil"
 func CreateComponentEditorWindow(path string) (Window gwu.Window) {
 	//MainWindow
 	Window = gwu.NewWindow("ceditor", "Component Editor")
+	MoreWidgets(Window).DisableBackButton()
 	
 	Window.AddHeadHTML(`
 	

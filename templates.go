@@ -4,6 +4,7 @@ import "github.com/icza/gowut/gwu"
 
 func CreateStartupWindow() (Window gwu.Window) {
 	Window = gwu.NewWindow("startup", "0ed")
+	MoreWidgets(Window).DisableBackButton()
 	
 	var templates = Public.Templates()
 	
@@ -52,7 +53,6 @@ func CreateStartupWindow() (Window gwu.Window) {
     <div class="model">
          <center>Model</center>
     </div>
-
   `))
 	
 		Button := gwu.NewButton("Accept")
