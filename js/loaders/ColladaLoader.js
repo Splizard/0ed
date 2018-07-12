@@ -3508,6 +3508,8 @@ THREE.ColladaLoader.prototype = {
 			return object;
 
 		}
+		
+		var fallbackMaterial = new THREE.MeshBasicMaterial( { color: 0xff00ff } ) ;
 
 		function resolveMaterialBinding( keys, instanceMaterials ) {
 
@@ -3516,7 +3518,17 @@ THREE.ColladaLoader.prototype = {
 			for ( var i = 0, l = keys.length; i < l; i ++ ) {
 
 				var id = instanceMaterials[ keys[ i ] ];
-				materials.push( getMaterial( id ) );
+				
+				if ( id === undefined ) {
+
+					console.warn( 'THREE.ColladaLoader: Material with key %s not found. Apply fallback material.', keys[ i ] );
+					materials.push( fallbackMaterial );
+
+				} else {
+
+					materials.push( getMaterial( id ) );
+
+				}
 
 			}
 
