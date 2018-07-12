@@ -46,6 +46,14 @@ func (e *Entity) ComponentEditor(component string, panel gwu.Panel) {
 				textbox := gwu.NewTextBox(value)
 				textbox.AddSyncOnETypes(gwu.ETypeKeyUp)
 				
+				if strings.Contains(value, "\n") {
+					textbox.SetRows(2)
+					textbox.Style().SetWidth("400px")
+					textbox.Style().SetHeightPx(16*strings.Count(value, "\n") + 10)
+				}
+				
+				textbox.Style().SetWidth("300px")
+				
 				textbox.AddEHandlerFunc(func(event gwu.Event) {
 					e.Edit(component+"/"+child, textbox.Text())
 					SaveButton.SetText("Save")
