@@ -1968,14 +1968,11 @@ THREE.ColladaLoader.prototype = {
 						data.vertices = parseGeometryVertices( child );
 						break;
 
-					case 'polygons':
-						console.warn( 'THREE.ColladaLoader: Unsupported primitive type: ', child.nodeName );
-						break;
-
 					case 'lines':
 					case 'linestrips':
 					case 'polylist':
 					case 'triangles':
+					case 'polygons':
 						data.primitives.push( parseGeometryPrimitive( child ) );
 						break;
 
@@ -2057,7 +2054,9 @@ THREE.ColladaLoader.prototype = {
 				count: parseInt( xml.getAttribute( 'count' ) ),
 				inputs: {},
 				stride: 0,
-				hasUV: false
+				hasUV: false,
+				p: [],
+				vcount: [],
 			};
 
 			for ( var i = 0, l = xml.childNodes.length; i < l; i ++ ) {
@@ -2082,11 +2081,35 @@ THREE.ColladaLoader.prototype = {
 						break;
 
 					case 'p':
-						primitive.p = parseInts( child.textContent );
+						if (primitive.type == "polygons") {
+							let polygon = parseInts( child.textContent );
+
+							primitive.vcount.push(3);
+							primitive.vcount.push(3);
+							primitive.vcount.push(3);
+							
+							primitive.p.push(polygon[0]);
+							primitive.p.push(polygon[1]);
+							primitive.p.push(polygon[2]);
+							
+							primitive.p.push(polygon[3]);
+							primitive.p.push(polygon[4]);
+							primitive.p.push(polygon[5]);
+							
+							primitive.p.push(polygon[6]);
+							primitive.p.push(polygon[7]);
+							primitive.p.push(polygon[8]);
+						} else {
+							primitive.p = parseInts( child.textContent );
+						}
 						break;
 
 				}
 
+			}
+			
+			if (primitive.type == "polygons") {
+				primitive.type = "polylist";
 			}
 
 			return primitive;
@@ -3612,6 +3635,10 @@ THREE.ColladaLoader.prototype = {
 
 						}
 						break;
+					
+					default:
+						
+						console.warn("Unknown object type!");
 
 				}
 
