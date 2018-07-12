@@ -36,7 +36,9 @@ func (a *Actor) Props() map[string]string {
 	
 	result := make(map[string]string)
 	for _, child := range props.ChildElements() {
-		result[child.SelectAttr("actor").Value] = child.SelectAttr("attachpoint").Value
+		if child.SelectAttr("attachpoint") != nil {
+			result[child.SelectAttr("actor").Value] = child.SelectAttr("attachpoint").Value
+		}
 	}
 	
 	return result
