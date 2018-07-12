@@ -1319,6 +1319,8 @@ THREE.ColladaLoader.prototype = {
 
 					case 'repeatU':
 					case 'repeatV':
+						data.technique[ child.nodeName ] = parseFloat( child.textContent ); 
+						break;  
 					case 'offsetU':
 					case 'offsetV':
 						data.technique[ child.nodeName ] = parseFloat( child.textContent );

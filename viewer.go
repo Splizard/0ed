@@ -70,8 +70,7 @@ func NewModelViewer(actor *Actor) gwu.HTML {
 		if (true) {
 			let texture = (new `+TextureLoader+`).load('`+Texture+`');
 					
-			texture.wrapS = THREE.RepeatWrapping;
-			texture.wrapT = THREE.RepeatWrapping;
+			
 			
 			let textureLoader = new THREE.TextureLoader();
 			
