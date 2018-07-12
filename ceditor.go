@@ -13,6 +13,14 @@ func CreateComponentEditorWindow(path string) (Window gwu.Window) {
 	//MainWindow
 	Window = gwu.NewWindow("ceditor", "Component Editor")
 	
+	Window.AddHeadHTML(`
+	
+	<script src="js/codemirror.js"></script>
+	<link rel="stylesheet" href="js/codemirror.css">
+	<script src="js/javascript.js"></script>
+	
+	`)
+	
 	file, err := ActiveMod.Open(Components+path+".js")
 	if err != nil {
 		Window.Add(gwu.NewLabel(fmt.Sprint(err)))
@@ -78,7 +86,15 @@ func CreateComponentEditorWindow(path string) (Window gwu.Window) {
 	Window.Add(Code)
 	
 
-	
+	Window.Add(gwu.NewHTML(`
+	<script>
+	var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("`+Code.ID().String()+`"), {
+		lineNumbers: true,
+	}
+	);
+	myCodeMirror.setSize("100%", "100%");
+	</script>
+	`))
 
 	
 	return
