@@ -84,6 +84,21 @@ func (m *Mod) Templates() []string {
 }
 
 //Only works for public right now.
+func (m *Mod) Images() []string {
+	//Retrieve all template files from the 0ad public mod.
+	var result []string
+	for _, f := range m.zip.File {
+		name := f.Name
+		if name[len(name)-4:] == ".dds" {
+			result = append(result, name)
+		}
+	}
+	sort.Strings(result)
+	
+	return result
+}
+
+//Only works for public right now.
 func (m *Mod) Components() []string {
 	var result []string
 	for _, f := range m.zip.File {

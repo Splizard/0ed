@@ -8,6 +8,7 @@ const Actors = "art/actors/"
 const Meshes = "art/meshes/"
 const Textures = "art/textures/skins/"
 const Components = "simulation/components/"
+const Github = "https://raw.githubusercontent.com/0ad/0ad/master/binaries/data/mods/public/"
 
 var Server gwu.Server
 

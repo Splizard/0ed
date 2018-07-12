@@ -72,6 +72,16 @@ func (e *Entity) ComponentEditor(component string, panel gwu.Panel) {
 			}
 		}
 		
+		//It's probably an image. So show it.
+		//TODO work with user mods.
+		if strings.Contains(value, ".png") {
+			for _, path := range Public.Images() {
+				if strings.Contains(path, value) {
+					panel.Add(gwu.NewImage(path, Github+strings.Replace(path, ".cached.dds", "", 1)))
+					break
+				}
+			}
+		}
 		
 	}
 }

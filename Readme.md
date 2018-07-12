@@ -22,7 +22,6 @@ Please report bugs to the issue tracker.
 * Multiple Mods.
 * Adding components and properties to an entity.
 * Search through templates.
-* Display image files.
 * Sound Playback.
 * Drag and drop to edit images/meshes/sounds.
 * "Reset to default" button for each property.
