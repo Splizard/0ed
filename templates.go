@@ -1,23 +1,11 @@
 package main
 
 import "github.com/icza/gowut/gwu"
-import "strings"
-import "sort"
 
 func CreateStartupWindow() (Window gwu.Window) {
 	Window = gwu.NewWindow("startup", "0ed")
 	
-	//Retrieve all template files from the 0ad public mod.
-	var templates []string
-	for _, f := range Public.File {
-		if strings.Contains(f.Name, Templates) {
-			name := strings.Split(f.Name, Templates)[1]
-			if name[len(name)-4:] == ".xml" {
-				templates = append(templates, name[:len(name)-4])
-			}
-		}
-	}
-	sort.Strings(templates)
+	var templates = Public.Templates()
 	
 	ListBox := gwu.NewListBox(templates)
 	ListBox.SetMulti(true)
@@ -28,6 +16,7 @@ func CreateStartupWindow() (Window gwu.Window) {
 		SetWidthPx(300).
 		SetHeightPx(380)
 	Window.Add(ListBox)
+	
 	
 	Window.Add(gwu.NewHTML(`<style>
     @font-face {
@@ -77,10 +66,35 @@ func CreateStartupWindow() (Window gwu.Window) {
 		}
 	}, gwu.ETypeClick)
 	Window.Add(Button)
+
 	
 	listbox := gwu.NewListBox([]string{"0ed"})
 	Window.Add(gwu.NewLabel("Active Mod:"))
 	Window.Add(listbox)
+	
+	var components = Public.Components()
+	
+	ComponentsListBox := gwu.NewListBox(components)
+	
+	Button = gwu.NewButton("Edit Component")
+			
+	Button.AddEHandlerFunc(func(e gwu.Event) {
+		if e.MouseBtn() == gwu.MouseBtnLeft {
+			Server.RemoveWin(Window)
+			Server.AddWin(CreateComponentEditorWindow(ComponentsListBox.SelectedValue()))
+			e.ReloadWin("ceditor")
+		}
+	}, gwu.ETypeClick)
+	Window.Add(Button)
+	
+	
+	ComponentsListBox.SetMulti(true)
+	ComponentsListBox.Style().SetWidthPx(200)
+	ComponentsListBox.Style().SetHeightPx(800)
+	Window.Add(ComponentsListBox)
+	
+	
+	
 	
 	return
 }

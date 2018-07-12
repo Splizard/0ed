@@ -7,6 +7,7 @@ const Portraits = "art/textures/ui/session/portraits/"
 const Actors = "art/actors/"
 const Meshes = "art/meshes/"
 const Textures = "art/textures/skins/"
+const Components = "simulation/components/"
 
 var Server gwu.Server
 
