@@ -35,5 +35,4 @@ Please report bugs to the issue tracker.
 * Props are not shown in the correct location.
 * Some models refuse to load, others have incorrect textures. WebGL limitations...
 * User interface is ugly, don't worry though, I will be working with a designer to improve it.
-* XML attributes are not displayed and are unable to be modified (they are still preserved though).
 * The 0ad data path is currently inflexible.

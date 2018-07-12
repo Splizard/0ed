@@ -23,8 +23,15 @@ func (e *Entity) WriteToFile(path string) {
 }
 
 func (e *Entity) Edit(path string, value string) {
-	element := e.Components.FindElement("./"+path)
 	
+	var attr string
+	if strings.Contains(path, ".") {
+		attr = strings.Split(path, ".")[1]
+		path = strings.Split(path, ".")[0]
+	}
+	
+	element := e.Components.FindElement("./"+path)
+
 	if element == nil {
 		reader := bufio.NewReader(strings.NewReader(path))
 		last := ""
@@ -46,10 +53,18 @@ func (e *Entity) Edit(path string, value string) {
 			last = dir
 		}
 		
-		element.CreateElement(filepath.Base(path)).SetText(value)
+		if attr != "" {
+			element.CreateElement(filepath.Base(path)).CreateAttr(attr, value)
+		} else {
+			element.CreateElement(filepath.Base(path)).SetText(value)
+		}
 		
 	} else {
-		element.SetText(value)
+		if attr != "" {
+			element.SelectAttr(attr).Value = value
+		} else {
+			element.SetText(value)
+		}
 	}
 }
 
@@ -64,7 +79,19 @@ func (e *Entity) Get(component string) (result map[string]string) {
 		for _, child := range e.Components.FindElement(component).ChildElements() {
 			
 			if child.SelectAttr("disable") == nil {
-				result[child.Tag] = child.Text()
+				
+				name := child.Tag
+			
+				if len(child.Attr) > 0 {
+					for _, attr := range child.Attr {
+						if attr.Key == "disable" || attr.Key == "replace" {
+							continue
+						}
+						result[name+"."+attr.Key] = attr.Value
+					}
+				}
+				
+				result[name] = child.Text()
 			} else {
 				delete(result, child.Tag)
 			}
