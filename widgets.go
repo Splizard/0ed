@@ -56,3 +56,13 @@ func (w Widgets) DisableBackButton() {
     </script>
 	`))
 }
+
+func NewSoundPlayer(url string) gwu.HTML {
+	return gwu.NewHTML(`
+	
+	<audio controls preload="metadata" style=" width:300px;">
+	<source src="`+url+`" type="audio/ogg">
+	</audio><br />
+	
+	`)
+}

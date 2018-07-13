@@ -116,6 +116,12 @@ func (e *Entity) ComponentEditor(component string, panel gwu.Panel) {
 			}
 		}
 		
+		if component == "Sound/SoundGroups" {
+			Sound, _ := LoadSound(value)
+			
+			panel.Add(NewSoundPlayer(Github+Sound.Random()))
+		}
+		
 		//It's probably an image. So show it.
 		//TODO work with user mods.
 		if strings.Contains(value, ".png") {
