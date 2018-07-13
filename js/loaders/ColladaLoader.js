@@ -2055,9 +2055,12 @@ THREE.ColladaLoader.prototype = {
 				inputs: {},
 				stride: 0,
 				hasUV: false,
-				p: [],
-				vcount: [],
 			};
+			
+			if (primitive.type == "polygons") {
+				primitive.p = [];
+				primitive.vcount = [];
+			}
 
 			for ( var i = 0, l = xml.childNodes.length; i < l; i ++ ) {
 
