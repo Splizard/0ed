@@ -211,6 +211,11 @@ func (e *Entity) Get(component string) (result map[string]string) {
 		result = make(map[string]string)
 	}
 	if e.Components.FindElement(component) != nil {
+		
+		if e.Components.FindElement(component).SelectAttr("replace") != nil {
+			result = make(map[string]string)
+		}
+		
 		for _, child := range e.Components.FindElement(component).ChildElements() {
 			name := child.Tag
 			if child.SelectAttr("disable") == nil {
@@ -225,6 +230,7 @@ func (e *Entity) Get(component string) (result map[string]string) {
 						result[name+"."+attr.Key] = attr.Value
 					}
 				}
+				
 				
 				result[name] = child.Text()
 			} else {
