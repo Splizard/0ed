@@ -43,7 +43,7 @@ func ReloadPublic() {
 		if err != nil {
 			println("Could not locate 0ad data file!")
 		} else {
-			Pyrogenesis = uid.HomeDir+"AppData/Local/0 A.D. alpha/binaries/system/pyrogenisis.exe"
+			Pyrogenesis = uid.HomeDir+"/AppData/Local/0 A.D. alpha/binaries/system/pyrogenisis.exe"
 		}
 	}
 }

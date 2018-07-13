@@ -330,7 +330,9 @@ func CreateEditorWindow(template string) (Window gwu.Window) {
 		if e.MouseBtn() == gwu.MouseBtnLeft {
 			ClosePublic() 
 			if runtime.GOOS == "windows" {
-				fmt.Println(exec.Command(Pyrogenesis, "-mod=public",  "-mod=0ed", "-autostart=skirmishes/Acropolis Bay (2)", "-autostart-civ=1:athen").CombinedOutput())
+				data, err := exec.Command(Pyrogenesis, "-mod=public",  "-mod=0ed", "-autostart=skirmishes/Acropolis Bay (2)", "-autostart-civ=1:athen").CombinedOutput()
+				fmt.Println(err)
+				fmt.Println(string(data))
 			}
 			if runtime.GOOS == "linux" {
 				fmt.Println(exec.Command(Pyrogenesis, "-mod=public",  "-mod=0ed", "-autostart=skirmishes/Acropolis Bay (2)", "-autostart-civ=1:athen").Start())
