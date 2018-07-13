@@ -26,6 +26,7 @@ Please report bugs to the issue tracker.
 * "Reset to default" button for each property.
 * "Ignore parent" option for each component.
 * "Disable" option for each component.
+* Multi-tab editing.
 
 ### Known Issues
 
