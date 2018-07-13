@@ -2,6 +2,8 @@ package main
 
 import "github.com/icza/gowut/gwu"
 
+var HidePublic bool
+
 func CreateStartupWindow() (Window gwu.Window) {
 	Window = gwu.NewWindow("startup", "0ed")
 	
@@ -57,6 +59,40 @@ func CreateStartupWindow() (Window gwu.Window) {
     
 	`)
 	
+	Select := gwu.NewHTML(`
+	<script>
+	
+	
+		$(document).ready(function() {
+		
+			$.fn.select2.defaults.set('matcher', function(params, data) {
+				// If there are no search terms, return all of the data
+				if ($.trim(params.term) === '') {
+					return data;
+				}
+
+				// Do not display the item if there is no 'text' property
+				if (typeof data.text === 'undefined') {
+					return null;
+				}
+
+				var words = params.term.toUpperCase().split(" ");
+
+				for (var i = 0; i < words.length; i++) {
+					if (data.text.toUpperCase().indexOf(words[i]) < 0) {
+					return null;
+					}
+				}
+
+				return data;
+			});
+		
+			$('.selectpicker').select2();
+		});
+	
+	
+</script>`)
+	
 	MoreWidgets(Window).DisableBackButton()
 	
 	var templates = Public.Templates()
@@ -93,15 +129,79 @@ func CreateStartupWindow() (Window gwu.Window) {
 		}
 	}, gwu.ETypeClick)
 	Window.Add(Button)
-
-	
-	listbox := gwu.NewListBox([]string{"0ed"})
-	Window.Add(gwu.NewLabel("Active Mod:"))
-	Window.Add(listbox)
 	
 	var components = Public.Components()
 	
 	ComponentsListBox := gwu.NewListBox(components)
+
+	//New ModManager() {
+		
+	
+		var mod_manager = gwu.NewHorizontalPanel()
+		listbox := gwu.NewListBox(append([]string{ActiveMod.Name}, OtherMods()...))
+		Window.Add(gwu.NewLabel("Active Mod:"))
+		mod_manager.Add(listbox)
+		
+		listbox.AddEHandlerFunc(func(e gwu.Event) {
+			NewMod(listbox.SelectedValue())
+		}, gwu.ETypeChange)
+		
+		var new_mod_name = gwu.NewTextBox("")
+		
+		mod_manager.Add(new_mod_name)
+		
+		var new_mod = gwu.NewButton("New")
+		
+		new_mod.AddEHandlerFunc(func(e gwu.Event) {
+			if e.MouseBtn() == gwu.MouseBtnLeft {
+				
+				NewMod(new_mod_name.Text())
+				listbox.SetValues(append([]string{ActiveMod.Name}, OtherMods()...))
+				
+				e.MarkDirty(listbox)
+			}
+		}, gwu.ETypeClick)
+		
+		mod_manager.Add(new_mod)
+
+		CheckBox := gwu.NewCheckBox("Hide Public")
+		CheckBox.SetState(HidePublic)
+		mod_manager.Add(CheckBox)
+		
+		if HidePublic {
+			ListBox.SetValues(ActiveMod.Templates())
+			ComponentsListBox.SetValues(ActiveMod.Components())	
+		}
+		
+		CheckBox.AddEHandlerFunc(func(e gwu.Event) {
+			if e.MouseBtn() == gwu.MouseBtnLeft {
+				
+				HidePublic = CheckBox.State()
+				
+				if CheckBox.State() {
+					e.MarkDirty(ListBox)
+					e.MarkDirty(Select)
+					ListBox.SetValues(ActiveMod.Templates())
+					
+					e.MarkDirty(ComponentsListBox)
+					ComponentsListBox.SetValues(ActiveMod.Components())
+				} else {
+					e.MarkDirty(ListBox)
+					e.MarkDirty(Select)
+					ListBox.SetValues(Public.Templates())
+					
+					e.MarkDirty(ComponentsListBox)
+					ComponentsListBox.SetValues(Public.Components())
+				}
+			}
+		}, gwu.ETypeClick)
+		
+		Window.Add(mod_manager)
+	// }
+	
+	
+	Window.Add(gwu.NewLabel("Component Editor"))
+	
 	
 	Button = gwu.NewButton("Edit Component")
 			
@@ -120,39 +220,7 @@ func CreateStartupWindow() (Window gwu.Window) {
 	ComponentsListBox.Style().SetHeightPx(800)
 	Window.Add(ComponentsListBox)
 	
-	Window.Add(gwu.NewHTML(`
-	<script>
-	
-	
-		$(document).ready(function() {
-		
-			$.fn.select2.defaults.set('matcher', function(params, data) {
-				// If there are no search terms, return all of the data
-				if ($.trim(params.term) === '') {
-					return data;
-				}
-
-				// Do not display the item if there is no 'text' property
-				if (typeof data.text === 'undefined') {
-					return null;
-				}
-
-				var words = params.term.toUpperCase().split(" ");
-
-				for (var i = 0; i < words.length; i++) {
-					if (data.text.toUpperCase().indexOf(words[i]) < 0) {
-					return null;
-					}
-				}
-
-				return data;
-			});
-		
-			$('.selectpicker').select2();
-		});
-	
-	
-</script>`))
+	Window.Add(Select)
 	
 	return
 }

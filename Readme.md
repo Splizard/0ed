@@ -19,7 +19,6 @@ Please report bugs to the issue tracker.
 ### Roadmap
 
 * Actor Editor in the sidebar.
-* Multiple Mods.
 * Adding components and properties to an entity.
 * Sound Playback.
 * Drag and drop to edit images/meshes/sounds.

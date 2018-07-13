@@ -13,6 +13,8 @@ const Github = "https://raw.githubusercontent.com/0ad/0ad/master/binaries/data/m
 var Server gwu.Server
 
 func main() {
+	ActiveMod.Load()
+	
 	//GUI
 	Server = gwu.NewServer("0ed", "localhost:8081")
 	Server.SetText("0ed")
