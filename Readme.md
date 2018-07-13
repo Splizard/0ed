@@ -20,7 +20,6 @@ Please report bugs to the issue tracker.
 
 * Actor Editor in the sidebar.
 * Adding components and properties to an entity.
-* Sound Playback.
 * Drag and drop to edit images/meshes/sounds.
 * "Ignore parent" option for each component.
 * Multi-tab editing.
