@@ -13,7 +13,7 @@ Binary releases will come later.
 
 ### Notes
 
-This editor is in heavy development and is lacking a lot of features.
+This editor is in heavy development and is lacking features.
 Please report bugs to the issue tracker.
 
 ### Roadmap
