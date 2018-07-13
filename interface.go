@@ -55,6 +55,20 @@ func (e *Entity) ComponentEditor(component string, panel gwu.Panel) {
 			
 		}, gwu.ETypeClick)
 		
+		HelpButton := gwu.NewButton("?")
+		HelpButton.AddEHandlerFunc(func(event gwu.Event) {
+			event.MarkDirty(label)
+			
+			if label.Text() != child {
+				label.SetText(child)
+				return
+			}
+			
+			if msg, ok := ComponentHelp[component+"/"+child]; ok {
+				label.SetText(msg)
+			}
+		}, gwu.ETypeClick)
+		
 		
 		//Special editors
 		if strings.TrimSpace(value) == "true" || strings.TrimSpace(value) == "false" {
@@ -73,14 +87,15 @@ func (e *Entity) ComponentEditor(component string, panel gwu.Panel) {
 			row.Add(checkbox)
 			row.Add(ResetButton)
 			row.Add(DisableButton)
+			row.Add(HelpButton)
 			panel.Add(row)
 			
 		} else {
 			if strings.TrimSpace(value) != "" {
-				textbox := gwu.NewTextBox(value)
+				textbox := gwu.NewTextBox(strings.TrimSpace(value))
 				textbox.AddSyncOnETypes(gwu.ETypeKeyUp)
 				
-				if strings.Contains(value, "\n") {
+				if strings.Contains(strings.TrimSpace(value), "\n") {
 					textbox.SetRows(2)
 					textbox.Style().SetWidth("400px")
 					textbox.Style().SetHeightPx(16*strings.Count(value, "\n") + 10)
@@ -97,6 +112,7 @@ func (e *Entity) ComponentEditor(component string, panel gwu.Panel) {
 				row.Add(textbox)
 				row.Add(ResetButton)
 				row.Add(DisableButton)
+				row.Add(HelpButton)
 				panel.Add(row)
 				
 			
