@@ -14,6 +14,8 @@ import "path/filepath"
 var Public *Mod = new(Mod)
 var ActiveMod *Mod = new(Mod)
 
+var Pyrogenesis string = "pyrogenesis"
+
 type Mod struct {
 	Name string
 	zip *zip.ReadCloser	
@@ -21,12 +23,14 @@ type Mod struct {
 
 var Mods string = "./mods"
 
-func init() {	
+func ClosePublic() {
+	Public.zip.Close()
+}
+
+func ReloadPublic() {
 	uid, _ := user.Current()
 	
 	var err error
-	
-	ActiveMod.Name = "0ed"
 	
 	//Try using 0ad's public.zip file.
 	// Open a zip archive for reading.
@@ -38,9 +42,16 @@ func init() {
 	
 		if err != nil {
 			println("Could not locate 0ad data file!")
+		} else {
+			Pyrogenesis = uid.HomeDir+"AppData/Local/0 A.D. alpha/binaries/system/pyrogenisis.exe"
 		}
-
 	}
+}
+
+func init() {
+	ActiveMod.Name = "0ed"	
+	
+	ReloadPublic()
 }
 
 func OtherMods() []string {

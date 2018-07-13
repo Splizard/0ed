@@ -5,6 +5,7 @@ import "fmt"
 import "os"
 import "os/exec"
 import "sort"
+import "runtime"
 
 var SaveButton gwu.Button
 
@@ -327,8 +328,14 @@ func CreateEditorWindow(template string) (Window gwu.Window) {
 			
 	Button.AddEHandlerFunc(func(e gwu.Event) {
 		if e.MouseBtn() == gwu.MouseBtnLeft {
-			fmt.Println(exec.Command("pyrogenesis", "-mod=public",  "-mod=0ed", "-autostart=skirmishes/Acropolis Bay (2)", "-autostart-civ=1:athen").Start())
-
+			ClosePublic() 
+			if runtime.GOOS == "windows" {
+				fmt.Println(exec.Command(Pyrogenesis, "-mod=public",  "-mod=0ed", "-autostart=skirmishes/Acropolis Bay (2)", "-autostart-civ=1:athen").CombinedOutput())
+			}
+			if runtime.GOOS == "linux" {
+				fmt.Println(exec.Command(Pyrogenesis, "-mod=public",  "-mod=0ed", "-autostart=skirmishes/Acropolis Bay (2)", "-autostart-civ=1:athen").Start())
+			}
+			ReloadPublic()
 		}
 	}, gwu.ETypeClick)
 	Window.Add(Button)
