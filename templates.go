@@ -206,6 +206,10 @@ func CreateStartupWindow() (Window gwu.Window) {
 	Button = gwu.NewButton("Edit Component")
 			
 	Button.AddEHandlerFunc(func(e gwu.Event) {
+		if ComponentsListBox.SelectedValue() == "" {
+			return
+		}
+		
 		if e.MouseBtn() == gwu.MouseBtnLeft {
 			Server.RemoveWin(Window)
 			Server.AddWin(CreateComponentEditorWindow(ComponentsListBox.SelectedValue()))
