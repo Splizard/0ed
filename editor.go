@@ -21,7 +21,7 @@ func CreateEditorWindow(template string) (Window gwu.Window) {
 	}
 	
 	//MainWindow
-	Window = gwu.NewWindow("editor", "Editor")
+	Window = gwu.NewWindow("editor", "Entity Editor")
 	MoreWidgets(Window).DisableBackButton()
 	
 	Window.AddHeadHTML(`
