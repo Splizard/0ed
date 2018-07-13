@@ -22,7 +22,6 @@ Please report bugs to the issue tracker.
 * Adding components and properties to an entity.
 * Sound Playback.
 * Drag and drop to edit images/meshes/sounds.
-* "Reset to default" button for each property.
 * "Ignore parent" option for each component.
 * "Disable" option for each component.
 * Multi-tab editing.

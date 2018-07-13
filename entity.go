@@ -22,6 +22,27 @@ func (e *Entity) WriteToFile(path string) {
 	}
 }
 
+func (e *Entity) Reset(path string) {
+	
+	var attr string
+	if strings.Contains(path, ".") {
+		attr = strings.Split(path, ".")[1]
+		path = strings.Split(path, ".")[0]
+	}
+	
+	element := e.Components.FindElement("./"+filepath.Dir(path))
+
+	if element == nil {
+
+	} else {
+		if attr != "" {
+			element.SelectElement(filepath.Base(path)).RemoveAttr(attr)
+		} else {
+			element.RemoveChild(element.SelectElement(filepath.Base(path)))
+		}
+	}
+}
+
 func (e *Entity) Edit(path string, value string) {
 	
 	var attr string

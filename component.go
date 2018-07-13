@@ -21,9 +21,19 @@ func (e *Entity) ComponentEditor(component string, panel gwu.Panel) {
 		value := Component[key]
 		child := key
 		
-		row := gwu.NewPanel()
+		row := gwu.NewHorizontalPanel()
 		label := gwu.NewLabel(child)
-		row.Add(label)
+		panel.Add(label)
+		
+		ResetButton := gwu.NewButton("↺")
+		ResetButton.AddEHandlerFunc(func(event gwu.Event) {
+			if event.MouseBtn() == gwu.MouseBtnLeft {
+				e.Reset(component+"/"+child)
+
+				EditorRefresh(event)
+			}
+		}, gwu.ETypeClick)
+		
 		
 		//Special editors
 		if strings.TrimSpace(value) == "true" || strings.TrimSpace(value) == "false" {
@@ -38,7 +48,9 @@ func (e *Entity) ComponentEditor(component string, panel gwu.Panel) {
 				event.MarkDirty(SaveButton)
 			}, gwu.ETypeChange)
 			
+			
 			row.Add(checkbox)
+			row.Add(ResetButton)
 			panel.Add(row)
 			
 		} else {
@@ -61,6 +73,7 @@ func (e *Entity) ComponentEditor(component string, panel gwu.Panel) {
 				}, gwu.ETypeChange, gwu.ETypeKeyUp)
 				
 				row.Add(textbox)
+				row.Add(ResetButton)
 				panel.Add(row)
 				
 			

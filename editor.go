@@ -8,6 +8,8 @@ import "sort"
 
 var SaveButton gwu.Button
 
+var EditorRefresh func(e gwu.Event)
+
 func CreateEditorWindow(template string) (Window gwu.Window) {
 	entity, err := LoadEntity(template)
 	if err != nil {
@@ -125,8 +127,8 @@ func CreateEditorWindow(template string) (Window gwu.Window) {
 		if len(entity.Get(component)) == 0 {
 			button.SetText(component+" ✓")
 		} else {
-			button.AddEHandlerFunc(func(e gwu.Event) {
-				if e.MouseBtn() == gwu.MouseBtnLeft {
+			var refresh = func(e gwu.Event) {
+				//if e.MouseBtn() == gwu.MouseBtnLeft {
 					editor.Clear()
 					editor.Style().SetPadding("50px")
 					label := gwu.NewLabel(component)
@@ -139,7 +141,12 @@ func CreateEditorWindow(template string) (Window gwu.Window) {
 					entity.ComponentEditor(component, editor)
 					
 					e.MarkDirty(editor)
-				}
+				//}
+			}
+			
+			button.AddEHandlerFunc(func(e gwu.Event) {
+				EditorRefresh = refresh
+				refresh(e)
 			}, gwu.ETypeClick)
 		}
 	}
