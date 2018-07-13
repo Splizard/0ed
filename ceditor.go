@@ -91,9 +91,13 @@ func CreateComponentEditorWindow(path string) (Window gwu.Window) {
 	<script>
 	var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("`+Code.ID().String()+`"), {
 		lineNumbers: true,
-	}
-	);
+	});
 	myCodeMirror.setSize("100%", "100%");
+	myCodeMirror.on("change", function() {
+		myCodeMirror.save();
+		document.getElementById("`+Code.ID().String()+`").onchange();
+	}
+	)
 	</script>
 	`))
 
