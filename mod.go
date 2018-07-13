@@ -34,7 +34,7 @@ func init() {
 
 		if err != nil {
 		
-	Public.zip, err = zip.OpenReader(uid.HomeDir+"/AppData/Local/0 A.D. alpha/data/mods/public/public.zip")
+	Public.zip, err = zip.OpenReader(uid.HomeDir+"/AppData/Local/0 A.D. alpha/binaries/data/mods/public/public.zip")
 	
 		if err != nil {
 			println("Could not locate 0ad data file!")
