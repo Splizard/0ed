@@ -23,7 +23,6 @@ Please report bugs to the issue tracker.
 * Sound Playback.
 * Drag and drop to edit images/meshes/sounds.
 * "Ignore parent" option for each component.
-* "Disable" option for each component.
 * Multi-tab editing.
 
 ### Known Issues

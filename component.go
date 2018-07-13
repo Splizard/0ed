@@ -34,6 +34,27 @@ func (e *Entity) ComponentEditor(component string, panel gwu.Panel) {
 			}
 		}, gwu.ETypeClick)
 		
+		DisableButton := gwu.NewButton("")
+		if !strings.Contains(value, "❌") {
+			DisableButton.SetText("✓")
+		} else {
+			value = strings.Replace(value, "❌", "", 1)
+			DisableButton.SetText("❌")
+		}
+		
+		DisableButton.AddEHandlerFunc(func(event gwu.Event) {
+			event.MarkDirty(DisableButton)
+			
+			if strings.Contains(DisableButton.Text(), "✓") {
+				DisableButton.SetText("❌")
+				e.Disable(component+"/"+child)
+			} else {
+				DisableButton.SetText("✓")
+				e.Enable(component+"/"+child)
+			}
+			
+		}, gwu.ETypeClick)
+		
 		
 		//Special editors
 		if strings.TrimSpace(value) == "true" || strings.TrimSpace(value) == "false" {
@@ -51,6 +72,7 @@ func (e *Entity) ComponentEditor(component string, panel gwu.Panel) {
 			
 			row.Add(checkbox)
 			row.Add(ResetButton)
+			row.Add(DisableButton)
 			panel.Add(row)
 			
 		} else {
@@ -74,6 +96,7 @@ func (e *Entity) ComponentEditor(component string, panel gwu.Panel) {
 				
 				row.Add(textbox)
 				row.Add(ResetButton)
+				row.Add(DisableButton)
 				panel.Add(row)
 				
 			

@@ -22,6 +22,118 @@ func (e *Entity) WriteToFile(path string) {
 	}
 }
 
+//Enabled or Disabled components.
+func (e *Entity) State(path string) bool {
+	var attr string
+	if strings.Contains(path, ".") {
+		attr = strings.Split(path, ".")[1]
+		path = strings.Split(path, ".")[0]
+	}
+	
+	if attr != "" {
+		println("cannot get the state of attributes!")
+		return true
+	}
+	
+	element := e.Components.FindElement("./"+path)
+	
+	if element == nil {
+		
+		//TODO
+		
+	} else {
+		return element.SelectAttr("disable") == nil
+	}
+	
+	return true
+}
+
+func (e *Entity) Disable(path string) {
+	
+	var attr string
+	if strings.Contains(path, ".") {
+		attr = strings.Split(path, ".")[1]
+		path = strings.Split(path, ".")[0]
+	}
+	
+	if attr != "" {
+		println("cannot disable attributes!")
+		return
+	}
+	
+	element := e.Components.FindElement("./"+path)
+	
+	if element == nil {
+				
+		if !strings.Contains(path, "/") {
+			e.Components.CreateElement(path).CreateAttr("disable", "")
+			return
+		}
+		
+		reader := bufio.NewReader(strings.NewReader(path))
+		last := ""
+		for i:=0; i < strings.Count(path, "/"); i++ {
+			dir, _ := reader.ReadString('/')
+			if last != "" {
+				dir = last+"/"+dir[:len(dir)-1]
+			} else {
+				dir = dir[:len(dir)-1]
+			}
+
+			if element = e.Components.FindElement("./"+dir); element == nil {
+				if last == "" {
+					element = e.Components.CreateElement(filepath.Base(dir))
+				} else {
+					element = e.Components.FindElement("./"+last).CreateElement(filepath.Base(dir))
+				}
+			} 
+			last = dir
+		}
+		
+		element.CreateElement(filepath.Base(path)).CreateAttr("disable", "")
+	} else {
+		element.CreateAttr("disable", "")
+	}
+}
+
+func (e *Entity) Enable(path string) {
+	var attr string
+	if strings.Contains(path, ".") {
+		attr = strings.Split(path, ".")[1]
+		path = strings.Split(path, ".")[0]
+	}
+	
+	if attr != "" {
+		println("cannot disable attributes!")
+		return
+	}
+	
+	element := e.Components.FindElement("./"+path)
+	
+	if element == nil {
+		//Uh oh!
+		println("Cannot enable non-existant element!")
+	} else {
+		if len(element.Child) == 0 && len(element.Attr) == 1 && e.Parent != nil && e.Parent.Component(filepath.Base(path)) != nil {
+			element.Parent().RemoveChild(element)
+		} else {
+			element.RemoveAttr("disable")
+		}
+	}
+}
+
+func (e *Entity) Component(name string) *etree.Element {
+	if element := e.Components.SelectElement(name); element != nil {
+		return element
+	}
+	
+	if e.Parent == nil {
+		return nil
+	}
+	
+	return e.Parent.Component(name)
+}
+	
 func (e *Entity) Reset(path string) {
 	
 	var attr string
@@ -36,7 +148,9 @@ func (e *Entity) Reset(path string) {
 
 	} else {
 		if attr != "" {
-			element.SelectElement(filepath.Base(path)).RemoveAttr(attr)
+			if element.SelectElement(filepath.Base(path)).SelectAttr(attr) != nil {
+				element.SelectElement(filepath.Base(path)).RemoveAttr(attr)
+			}
 		} else {
 			element.RemoveChild(element.SelectElement(filepath.Base(path)))
 		}
@@ -98,10 +212,10 @@ func (e *Entity) Get(component string) (result map[string]string) {
 	}
 	if e.Components.FindElement(component) != nil {
 		for _, child := range e.Components.FindElement(component).ChildElements() {
-			
+			name := child.Tag
 			if child.SelectAttr("disable") == nil {
 				
-				name := child.Tag
+				
 			
 				if len(child.Attr) > 0 {
 					for _, attr := range child.Attr {
@@ -115,6 +229,7 @@ func (e *Entity) Get(component string) (result map[string]string) {
 				result[name] = child.Text()
 			} else {
 				delete(result, child.Tag)
+				result[name] = child.Text()+"❌"
 			}
 		}
 	}

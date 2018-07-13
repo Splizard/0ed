@@ -123,32 +123,65 @@ func CreateEditorWindow(template string) (Window gwu.Window) {
 		button.Style().Set("float", "left")
 		components.Add(button)
 		
-		
-		if len(entity.Get(component)) == 0 {
-			button.SetText(component+" ✓")
-		} else {
-			var refresh = func(e gwu.Event) {
-				//if e.MouseBtn() == gwu.MouseBtnLeft {
-					editor.Clear()
-					editor.Style().SetPadding("50px")
-					label := gwu.NewLabel(component)
-					label.Style().SetFontSize("32px")
-					label.Style().SetPaddingBottom("30px")
-					editor.Add(label)
-					editor.SetHAlign(gwu.HALeft)
-					
-					//Generate the component editor for this component.
-					entity.ComponentEditor(component, editor)
-					
-					e.MarkDirty(editor)
-				//}
-			}
-			
-			button.AddEHandlerFunc(func(e gwu.Event) {
-				EditorRefresh = refresh
-				refresh(e)
-			}, gwu.ETypeClick)
+		if !entity.State(component) {
+			button.SetText(component+" ❌")
 		}
+		
+		var refresh = func(e gwu.Event) {
+			//if e.MouseBtn() == gwu.MouseBtnLeft {
+				editor.Clear()
+				editor.Style().SetPadding("50px")
+				label := gwu.NewLabel(component)
+				label.Style().SetFontSize("32px")
+				label.Style().SetPaddingBottom("30px")
+				
+				row := gwu.NewHorizontalPanel()
+				
+				row.Add(label)
+				
+				
+				DisableButton := gwu.NewButton("✓")
+				DisableButton.Style().SetMarginLeft("25px")
+				
+				if entity.State(component) {
+					DisableButton.SetText("✓")
+				} else {
+					DisableButton.SetText("❌")
+				}
+				
+				DisableButton.AddEHandlerFunc(func(e gwu.Event) {
+					e.MarkDirty(DisableButton)
+					e.MarkDirty(button)
+					
+					if DisableButton.Text() == "✓" {
+						DisableButton.SetText("❌")
+						button.SetText(component+" ❌")
+						entity.Disable(component)
+					} else {
+						DisableButton.SetText("✓")
+						button.SetText(component)
+						entity.Enable(component)
+					}
+				}, gwu.ETypeClick)
+				
+				row.Add(DisableButton)
+				
+				editor.Add(row)
+				editor.SetHAlign(gwu.HALeft)
+				
+				
+				
+				//Generate the component editor for this component.
+				entity.ComponentEditor(component, editor)
+				
+				e.MarkDirty(editor)
+			//}
+		}
+			
+		button.AddEHandlerFunc(func(e gwu.Event) {
+			EditorRefresh = refresh
+			refresh(e)
+		}, gwu.ETypeClick)
 	}
 	Window.Add(components)
 	Window.Add(editor)
