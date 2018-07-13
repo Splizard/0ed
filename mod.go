@@ -128,6 +128,7 @@ func (m *Mod) Templates() []string {
 	} else {
 		
 		filepath.Walk(Mods+Templates, func(path string, info os.FileInfo, err error) error {
+			path = strings.Replace(path, "\\", "/", -1)
 			if strings.Contains(path, Templates) {
 				name := strings.Split(path, Templates)[1]
 				if len(name) > 4 && name[len(name)-4:] == ".xml" {
@@ -178,6 +179,7 @@ func (m *Mod) Components() []string {
 	} else {
 		
 		filepath.Walk(Mods+Components, func(path string, info os.FileInfo, err error) error {
+			path = strings.Replace(path, "\\", "/", -1)
 			if strings.Contains(path, Components) {
 				name := strings.Split(path, Components)[1]
 				if len(name) > 3 && name[len(name)-3:] == ".js" {
